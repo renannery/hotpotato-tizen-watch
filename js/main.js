@@ -118,3 +118,11 @@ window.onload = function() {
     bindEvents();
     // pulseBackground();
 };
+
+$(document).ready(function() {
+    $("#page-body").on("tap", function(event) {
+        event.preventDefault();
+        //console.log("AAA");
+        window.location = "sendpotato.html";
+    });
+});
