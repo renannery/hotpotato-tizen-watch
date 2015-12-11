@@ -40,3 +40,6 @@ local.properties
 
 # STS (Spring Tool Suite)
 .springBeans
+.sdk_delta.info
+.sign/author-signature.xml
+.sign/signature1.xml
