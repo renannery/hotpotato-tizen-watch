@@ -2,6 +2,7 @@ window.onload = function() {
     // TODO:: Do your initialization job
 
     var jid;
+    var currentPotatoId;
     // add eventListener for tizenhwkey
     document.addEventListener('tizenhwkey', function(e) {
         if (e.keyName == "back")
@@ -52,8 +53,9 @@ window.onload = function() {
                 },
 
                 onMessage: function(message) {
-                    var user = message.from.split("@", 1);
-                    alert(user + "\n" + message.body);
+                    currentPotatoId = message.body;
+                    // var user = message.from.split("@", 1);
+                    // alert(user + "\n" + message.body);
                 },
                 onError: function(error) {
                     alert(error.error);
@@ -67,15 +69,11 @@ window.onload = function() {
 
         $("#sendMessage").click(function() {
             var messageTo;
-            if (jid == "renannery10") {
-                messageTo = "ursinho@jabber.rootbash.com";
-            } else {
-                messageTo = "renannery10@jabber.rootbash.com";
-            }
-
+            var messageTo = (jid == "renannery10") ? "ursinho" : "renannery10";
+            
             $.xmpp.sendMessage({
-                body: "Yo",
-                to: messageTo
+                body: currentPotatoId,
+                to: messageTo + "@jabber.rootbash.com"
             });
 
             getUserLocation();
@@ -118,7 +116,5 @@ window.onload = function() {
         });
         $("body").append(chat);
     }
-
-
 
 };
