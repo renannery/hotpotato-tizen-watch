@@ -28,8 +28,7 @@ window.onload = function() {
                 jid: jid,
                 password: password,
                 onConnect: function() {
-                    alert("Connected");
-                    logContainer.html("Connected");
+                    alert(jid + "\nConnected");
                     $.xmpp.setPresence(null);
                 },
                 onPresence: function(presence) {
@@ -48,14 +47,13 @@ window.onload = function() {
                     contactList.append(contact);
                 },
                 onDisconnect: function() {
-                    alert("Disconnected");
-                    logContainer.html("Disconnected");
+                    alert(jid + "\nDesconnected");
                 },
 
                 onMessage: function(message) {
                     currentPotatoId = message.body;
-                    // var user = message.from.split("@", 1);
-                    // alert(user + "\n" + message.body);
+                    var user = message.from.split("@", 1);
+                    alert(user + "\n" + message.body);
                 },
                 onError: function(error) {
                     alert(error.error);
@@ -75,8 +73,7 @@ window.onload = function() {
                 body: currentPotatoId,
                 to: messageTo + "@jabber.rootbash.com"
             });
-
-            getUserLocation();
+            alert("Potato \n" + currentPotatoId + "\nsent to \n" + messageTo); 
         });
 
     });

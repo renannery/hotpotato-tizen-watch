@@ -1,4 +1,4 @@
-var flagConsole = false,
+var flagConsole = false;
     // battery = navigator.battery || navigator.webkitBattery || navigator.mozBattery,interval;
 function displayWeekDay(date) {
     var str_day = document.getElementById('str_day'),
