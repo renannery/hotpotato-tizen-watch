@@ -19,6 +19,10 @@ function displayWeekDay(date) {
     str_day.innerHTML = str_allday;
 }
 
+function openSendPotato() {
+    window.location="sendpotato.html"
+}
+
 function displayTime() {
     var str_hours = document.getElementById('str_hours'),
         str_console = document.getElementById('str_console'),
