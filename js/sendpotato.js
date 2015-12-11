@@ -51,6 +51,7 @@ window.onload = function() {
                 },
 
                 onMessage: function(message) {
+                    alert("test");
                     currentPotatoId = message.body;
                     var user = message.from.split("@", 1);
                     alert(user + "\n" + message.body);
