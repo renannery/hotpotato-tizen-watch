@@ -9,6 +9,6 @@
     <tizen:profile name="wearable"/>
     <tizen:setting background-support="disable" encryption="disable" hwkey-event="enable"/>
     <access origin="*" subdomains="true"></access>
-	<tizen:allow-navigation></tizen:allow-navigation>
+	<tizen:allow-navigation>*</tizen:allow-navigation>
 	<tizen:privilege name="http://tizen.org/privilege/internet"/>    
 </widget>
