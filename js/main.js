@@ -18,6 +18,10 @@ function displayWeekDay(date) {
     str_day.innerHTML = str_allday;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> bc5f9a2fc8f5b587a64d1d453388a8a148bc84da
 function openSendPotato() {
     window.location="sendpotato.html"
 }
