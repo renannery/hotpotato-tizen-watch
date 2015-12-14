@@ -2,7 +2,7 @@ var flagConsole = false;
 var secondsToBurn = 10;
 var countdownInterval;
 var countdownField;
-var host = "54.94.241.117:9090";
+var host = "ec2-54-207-40-28.sa-east-1.compute.amazonaws.com:9090";
 
 function displayCountdown() {
     countdownField = document.getElementById('countdown');
@@ -80,11 +80,13 @@ function ambientDigitalWatch() {
 }
 
 function xmppConnect() {
-    jid = $('input[name="user"]: checked ').val();
+    var randomId = Math.floor(Math.random() * 2) + 1;
+    jid = randomId.toString();
     var password = "Senha2015"
     var logContainer = $("#log");
     var contactList = $("#contacts");
     var messageTo = "";
+    var url = "http://ec2-54-207-40-28.sa-east-1.compute.amazonaws.com:7070/http-bind/";
     $.xmpp.connect({
         url: url,
         jid: jid,
@@ -144,16 +146,26 @@ function bindEvents() {
     });
 }
 
+function sendMessage() {
+    var messageTo;
+    var messageTo = (jid == "1") ? "2": jid;
+
+    $.xmpp.sendMessage({
+        body: currentPotatoId,
+        to: messageTo + "@ec2-54-207-40-28.sa-east-1.compute.amazonaws.com"
+    });
+    alert("Potato \n" + currentPotatoId + "\nsent to \n" + messageTo);
+}
+
 function createUser() {
     $.ajaxSetup({
         headers: {
             "Authorization": "koNH9NW6U11Ws23g",
-            "Content-Type": "application/json",
-            "X-Requested-With": "XMLHttpRequest"
+            "Content-Type": "application/json"
         }
     });
 
-    var user = '{"username": "teste10","password": "p4ssword"}';
+    var user = '{"username": "teste1010","password": "p4ssword"}';
 
     $.ajax({
         url: 'http://' + host + '/plugins/restapi/v1/users',
@@ -161,7 +173,10 @@ function createUser() {
         crossDomain: true,
         data: JSON.stringify(user),
         success: function(data) {
-            console.log("JSON Data: " + data + " status " + status);
+            alert("Success data: " + data + " status " + status);
+        },
+        error: function(data) {
+            alert("Error data: " + data + " status " + status);
         }
     });
 }
@@ -200,7 +215,8 @@ window.onload = function() {
     // bindEvents();
     // getUserTeste();
     // getUser();
-    createUser();
+    xmppConnect();
+    // createUser();
     // displayCountdown();
 
     // pulseBackground();
