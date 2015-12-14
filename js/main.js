@@ -1,25 +1,31 @@
 var flagConsole = false;
-    // battery = navigator.battery || navigator.webkitBattery || navigator.mozBattery,interval;
-function displayWeekDay(date) {
-    var str_day = document.getElementById('str_day'),
-        get_day = date.getDay(),
-        str_allday;
-        arr_day = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-        arr_month = ["Jan", "Fab", "Mar", "Apr", "May", "Jul", "Jun","Aug", "Sep", "Oct", "Nov", "Dec" ], 
-        get_date = date.getDate(),
-        
-        month = date.getMonth();
+var secondsToBurn = 10;
+var countdownInterval;
+var countdownField;
+var host = "54.94.241.117:9090";
 
-    if (get_date < 10) {
-        get_date = "0" + get_date;
-    }
+function displayCountdown() {
+    countdownField = document.getElementById('countdown');
+    startCountdown();
+}
 
-    str_allday = arr_day[get_day] + " " + get_date + " " + arr_month[month];
-    str_day.innerHTML = str_allday;
+function startCountdown() {
+    countdownInterval = setInterval(function() {
+        countdown();
+    }, 1000);
+}
+
+function countdown() {
+    if (secondsToBurn > 0) {
+        secondsToBurn -= 1;
+        countdownField.innerHTML = secondsToBurn;
+        return;
+    };
+    clearInterval(countdownInterval);
 }
 
 function openSendPotato() {
-    window.location="sendpotato.html"
+    window.location = "sendpotato.html"
 }
 
 function displayTime() {
@@ -29,14 +35,12 @@ function displayTime() {
         str_ampm = document.getElementById('str_ampm'),
         date;
 
-    try{
-        date  = tizen.time.getCurrentDateTime();
+    try {
+        date = tizen.time.getCurrentDateTime();
         // date = new Date("July 21, 1983 01:15:00");
-    }catch(e) {
+    } catch (e) {
         alert(e.message);
     }
-
-    displayWeekDay(date);
 
     hours = date.getHours();
     str_hours.innerHTML = date.getHours();
@@ -75,8 +79,49 @@ function ambientDigitalWatch() {
     document.getElementById('str_console').style.visibility = 'visible';
 }
 
-function getBatteryState() {
-    
+function xmppConnect() {
+    jid = $('input[name="user"]: checked ').val();
+    var password = "Senha2015"
+    var logContainer = $("#log");
+    var contactList = $("#contacts");
+    var messageTo = "";
+    $.xmpp.connect({
+        url: url,
+        jid: jid,
+        password: password,
+        onConnect: function() {
+            alert(jid + "\nConnected");
+            $.xmpp.setPresence(null);
+        },
+        onPresence: function(presence) {
+
+            var contact = $("<li>");
+            messageTo = presence.from;
+            contact.append("<a href='javascript:void(0)'>" + presence.from + "</a>");
+            contact.find("a").click(function() {
+                var id = MD5.hexdigest(presence.from);
+                var conversation = $("#" + id);
+                if (conversation.length == 0)
+                    openChat({
+                        to: presence.from
+                    });
+            });
+            contactList.append(contact);
+        },
+        onDisconnect: function() {
+            alert(jid + "\nDesconnected");
+        },
+
+        onMessage: function(message) {
+            alert("test");
+            currentPotatoId = message.body;
+            var user = message.from.split("@", 1);
+            alert(user + "\n" + message.body);
+        },
+        onError: function(error) {
+            alert(error.error);
+        }
+    });
 }
 
 function bindEvents() {
@@ -99,6 +144,47 @@ function bindEvents() {
     });
 }
 
+function createUser() {
+    $.ajaxSetup({
+        headers: {
+            "Authorization": "koNH9NW6U11Ws23g",
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest"
+        }
+    });
+
+    var user = '{"username": "teste10","password": "p4ssword"}';
+
+    $.ajax({
+        url: 'http://' + host + '/plugins/restapi/v1/users',
+        type: "POST",
+        crossDomain: true,
+        data: JSON.stringify(user),
+        success: function(data) {
+            console.log("JSON Data: " + data + " status " + status);
+        }
+    });
+}
+
+function getUser() {
+    $.ajaxSetup({
+        headers: {
+            "Authorization": "koNH9NW6U11Ws23g",
+            "Accept": "application/json"
+        }
+    });
+
+    $.get('http://' + host + '/plugins/restapi/v1/users', function(data, status) {
+        console.log("JSON Data: " + data.user.length);
+    });
+}
+
+function getUserTeste() {
+    $.get('http://54.94.241.117:2403/index.html', function(data, status) {
+        console.log("JSON Data: " + data.user.length);
+    });
+}
+
 
 window.onload = function() {
     document.addEventListener('tizenhwkey', function(e) {
@@ -109,9 +195,14 @@ window.onload = function() {
         }
     });
 
-    displayTime();
-    initDigitalWatch();
-    bindEvents();
+    // displayTime();
+    // initDigitalWatch();
+    // bindEvents();
+    // getUserTeste();
+    // getUser();
+    createUser();
+    // displayCountdown();
+
     // pulseBackground();
 };
 

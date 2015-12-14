@@ -125,17 +125,17 @@ hour&minutes
 string day & month
 */
 
-#rec_string_time {
+#div-countdown {
     color: red;
     position: absolute;
     height: 30%;
-    top: 80%;
-    left: 24%;
+    top: 84%;
+    left: 50%;
 }
 
-#str_day {
+#countdown {
     font-size: 250%;
-    color: white;
+    color: red;
     float: left;
 }
 
