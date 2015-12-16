@@ -58,23 +58,8 @@ body {
     background-color: white;
 }
 
-
-/*
-hour&minutes
-*/
-
-#rec_time {
-    left: 5.1%;
-    position: absolute;
-    width: 90%;
-    height: 50%;
-    top: 8%;
-    padding-left: 20%;
-}
-
 #stove {
     background-color: orange;
-    background-image: url('/images/potato.png');
     background-repeat: no-repeat;
     background-position: center;
     position: absolute;
@@ -91,6 +76,27 @@ hour&minutes
     height: 150px;
     top: 40%;
     left: 10%;
+}
+
+#potato {
+    position: absolute;
+    top: 50%;
+    left: 35%;
+    z-index: 10;
+}
+
+
+/*
+hour&minutes
+*/
+
+#rec_time {
+    left: 5.1%;
+    position: absolute;
+    width: 90%;
+    height: 50%;
+    top: 8%;
+    padding-left: 20%;
 }
 
 #str_hours {
@@ -130,7 +136,7 @@ string day & month
     position: absolute;
     height: 30%;
     top: 84%;
-    left: 50%;
+    left: 45%;
 }
 
 #countdown {

@@ -2,7 +2,9 @@ var flagConsole = false;
 var secondsToBurn = 10;
 var countdownInterval;
 var countdownField;
-var host = "ec2-54-207-40-28.sa-east-1.compute.amazonaws.com:9090";
+var host = "jabber.rootbash.com";
+var jid;
+var potatoReceived = false;
 
 function displayCountdown() {
     countdownField = document.getElementById('countdown');
@@ -21,7 +23,14 @@ function countdown() {
         countdownField.innerHTML = secondsToBurn;
         return;
     };
-    clearInterval(countdownInterval);
+    stopCountdown();
+    burnedPotatoImage(true);
+}
+
+function stopCountdown() {
+    clearInterval(countdownInterval);   
+    secondsToBurn = 10;
+    countdownField.innerHTML = "";
 }
 
 function openSendPotato() {
@@ -81,44 +90,25 @@ function ambientDigitalWatch() {
 
 function xmppConnect() {
     var randomId = Math.floor(Math.random() * 2) + 1;
-    jid = randomId.toString();
+    jid = "renannery10";
     var password = "Senha2015"
-    var logContainer = $("#log");
-    var contactList = $("#contacts");
     var messageTo = "";
-    var url = "http://ec2-54-207-40-28.sa-east-1.compute.amazonaws.com:7070/http-bind/";
+    var url = "http://" + host + ":7070/http-bind/";
     $.xmpp.connect({
         url: url,
         jid: jid,
         password: password,
         onConnect: function() {
-            alert(jid + "\nConnected");
+            alert("Potato \n player \nconnected");
             $.xmpp.setPresence(null);
         },
-        onPresence: function(presence) {
-
-            var contact = $("<li>");
-            messageTo = presence.from;
-            contact.append("<a href='javascript:void(0)'>" + presence.from + "</a>");
-            contact.find("a").click(function() {
-                var id = MD5.hexdigest(presence.from);
-                var conversation = $("#" + id);
-                if (conversation.length == 0)
-                    openChat({
-                        to: presence.from
-                    });
-            });
-            contactList.append(contact);
-        },
+        onPresence: function(presence) {},
         onDisconnect: function() {
             alert(jid + "\nDesconnected");
         },
-
         onMessage: function(message) {
-            alert("test");
-            currentPotatoId = message.body;
-            var user = message.from.split("@", 1);
-            alert(user + "\n" + message.body);
+            animateReceivedPotato();
+            displayCountdown();
         },
         onError: function(error) {
             alert(error.error);
@@ -148,58 +138,36 @@ function bindEvents() {
 
 function sendMessage() {
     var messageTo;
-    var messageTo = (jid == "1") ? "2": jid;
+    var messageTo = (jid == "renannery10") ? "ursinho" : "renannery10";
 
     $.xmpp.sendMessage({
-        body: currentPotatoId,
-        to: messageTo + "@ec2-54-207-40-28.sa-east-1.compute.amazonaws.com"
+        body: "YO",
+        to: messageTo + "@" + host
     });
-    alert("Potato \n" + currentPotatoId + "\nsent to \n" + messageTo);
+    animateSendPotato();
+    stopCountdown();
+    burnedPotatoImage(false);
 }
 
-function createUser() {
-    $.ajaxSetup({
-        headers: {
-            "Authorization": "koNH9NW6U11Ws23g",
-            "Content-Type": "application/json"
-        }
-    });
-
-    var user = '{"username": "teste1010","password": "p4ssword"}';
-
-    $.ajax({
-        url: 'http://' + host + '/plugins/restapi/v1/users',
-        type: "POST",
-        crossDomain: true,
-        data: JSON.stringify(user),
-        success: function(data) {
-            alert("Success data: " + data + " status " + status);
-        },
-        error: function(data) {
-            alert("Error data: " + data + " status " + status);
-        }
-    });
+function animateSendPotato() {
+    $("#potato").animate({
+        right: -1000,
+        top: -1000
+    }, 500);
+    potatoReceived = false
 }
 
-function getUser() {
-    $.ajaxSetup({
-        headers: {
-            "Authorization": "koNH9NW6U11Ws23g",
-            "Accept": "application/json"
-        }
-    });
-
-    $.get('http://' + host + '/plugins/restapi/v1/users', function(data, status) {
-        console.log("JSON Data: " + data.user.length);
-    });
+function animateReceivedPotato() {
+    $("#potato").animate({
+        right: -150,
+        top: 150
+    }, 500);
+    potatoReceived = true;
 }
 
-function getUserTeste() {
-    $.get('http://54.94.241.117:2403/index.html', function(data, status) {
-        console.log("JSON Data: " + data.user.length);
-    });
+function burnedPotatoImage(burnedPotato) {
+    document.getElementById("potato").src = burnedPotato ? "images/burnedpotato.png" : "images/potato.png";
 }
-
 
 window.onload = function() {
     document.addEventListener('tizenhwkey', function(e) {
@@ -210,22 +178,23 @@ window.onload = function() {
         }
     });
 
-    // displayTime();
-    // initDigitalWatch();
-    // bindEvents();
+    displayTime();
+    initDigitalWatch();
+    bindEvents();
     // getUserTeste();
     // getUser();
     xmppConnect();
     // createUser();
-    // displayCountdown();
 
     // pulseBackground();
 };
 
 $(document).ready(function() {
+    animateSendPotato();
     $("#page-body").on("tap", function(event) {
         event.preventDefault();
-        //console.log("AAA");
-        openSendPotato();
+        if (potatoReceived) {
+            sendMessage();
+        }
     });
 });
