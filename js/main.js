@@ -5,6 +5,7 @@ var countdownField;
 var host = "jabber.rootbash.com";
 var jid;
 var potatoReceived = false;
+var randomId;
 
 function displayCountdown() {
     countdownField = document.getElementById('countdown');
@@ -89,8 +90,8 @@ function ambientDigitalWatch() {
 }
 
 function xmppConnect() {
-    var randomId = Math.floor(Math.random() * 2) + 1;
-    jid = "renannery10";
+    randomId = Math.floor(Math.random() * 2) + 1;
+    jid = randomId == 1 ? "renannery10" : "ursinho";
     var password = "Senha2015"
     var messageTo = "";
     var url = "http://" + host + ":7070/http-bind/";
@@ -99,7 +100,7 @@ function xmppConnect() {
         jid: jid,
         password: password,
         onConnect: function() {
-            alert("Potato \n player \nconnected");
+            alert("Potato P" + randomId + "\nconnected");
             $.xmpp.setPresence(null);
         },
         onPresence: function(presence) {},
@@ -150,11 +151,11 @@ function sendMessage() {
 }
 
 function animateSendPotato() {
+    potatoReceived = false
     $("#potato").animate({
         right: -1000,
         top: -1000
     }, 500);
-    potatoReceived = false
 }
 
 function animateReceivedPotato() {
@@ -181,12 +182,7 @@ window.onload = function() {
     displayTime();
     initDigitalWatch();
     bindEvents();
-    // getUserTeste();
-    // getUser();
     xmppConnect();
-    // createUser();
-
-    // pulseBackground();
 };
 
 $(document).ready(function() {
