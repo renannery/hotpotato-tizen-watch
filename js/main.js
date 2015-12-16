@@ -112,7 +112,7 @@ function xmppConnect() {
             displayCountdown();
         },
         onError: function(error) {
-            alert(error.error);
+            xmppConnect();
         }
     });
 }
