@@ -8,6 +8,8 @@ var potatoReceived = false;
 var randomId;
 var burned = false;
 var Parse;
+var savedParse = false;
+
 function displayCountdown() {
     countdownField = document.getElementById('countdown');
     startCountdown();
@@ -89,8 +91,8 @@ function ambientDigitalWatch() {
 
 function xmppConnect() {
     randomId = Math.floor(Math.random() * 2) + 1;
-    // jid = randomId == 1 ? "renannery10" : "ursinho";
-    jid = "renannery10";
+//    jid = randomId == 1 ? "renannery10" : "ursinho";
+    jid = "ursinho";
     var password = "Senha2015"
     var messageTo = "";
     var url = "http://" + host + ":7070/http-bind/";
@@ -99,13 +101,11 @@ function xmppConnect() {
         jid: jid,
         password: password,
         onConnect: function() {
-            alert("Potato P" + randomId + "\nconnected");
+            alert("You are\nPotato P" + randomId);
             $.xmpp.setPresence(null);
         },
         onPresence: function(presence) {},
-        onDisconnect: function() {
-            alert(jid + "\nDesconnected");
-        },
+        onDisconnect: function() {},
         onMessage: function(message) {
             animateReceivedPotato();
             displayCountdown();
@@ -146,6 +146,7 @@ function sendMessage() {
     });
     animateSendPotato();
     stopCountdown();
+    savedParse = false;
     savePotatoLocation();
     burnedPotatoImage(false);
 }
@@ -158,20 +159,25 @@ function savePotatoLocation() {
     };
 
     var watchID;
+
     function successCallback(position) {
 
-        var Path = Parse.Object.extend("Path");
-        var potatoPath = new Path();
-        var latitude = position.coords.latitude;
-        var longitude = position.coords.longitude;
-        var userLocation = new Parse.GeoPoint(latitude, longitude);
-        potatoPath.save({
-            location: userLocation,
-            burned: burned
-        }).then(function(object) {
-            burned = false;
-            navigator.geolocation.clearWatch(watchID);
-        });
+        if (!savedParse) {
+            var Path = Parse.Object.extend("Path");
+            var potatoPath = new Path();
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            var userLocation = new Parse.GeoPoint(latitude, longitude);
+            potatoPath.save({
+                location: userLocation,
+                userId: "P" + randomId,
+                burned: burned
+            }).then(function(object) {
+                burned = false;
+                savedParse = true;
+                navigator.geolocation.clearWatch(watchID);
+            });
+        };
     }
 
     function errorCallback(error) {}
