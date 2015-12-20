@@ -6,6 +6,7 @@ var host = "jabber.rootbash.com";
 var jid;
 var potatoReceived = false;
 var randomId;
+var burned = false;
 var Parse;
 function displayCountdown() {
     countdownField = document.getElementById('countdown');
@@ -24,6 +25,7 @@ function countdown() {
         countdownField.innerHTML = secondsToBurn;
         return;
     };
+    burned = true;
     stopCountdown();
     burnedPotatoImage(true);
 }
@@ -32,10 +34,6 @@ function stopCountdown() {
     clearInterval(countdownInterval);
     secondsToBurn = 10;
     countdownField.innerHTML = "";
-}
-
-function openSendPotato() {
-    window.location = "sendpotato.html"
 }
 
 function displayTime() {
@@ -91,7 +89,8 @@ function ambientDigitalWatch() {
 
 function xmppConnect() {
     randomId = Math.floor(Math.random() * 2) + 1;
-    jid = randomId == 1 ? "renannery10" : "ursinho";
+    // jid = randomId == 1 ? "renannery10" : "ursinho";
+    jid = "renannery10";
     var password = "Senha2015"
     var messageTo = "";
     var url = "http://" + host + ":7070/http-bind/";
@@ -147,11 +146,11 @@ function sendMessage() {
     });
     animateSendPotato();
     stopCountdown();
+    savePotatoLocation();
     burnedPotatoImage(false);
-    savePotatoLocation(false);
 }
 
-function savePotatoLocation(burnedpotato) {
+function savePotatoLocation() {
     var options = {
         enableHighAccuracy: true,
         maximumAge: 600000,
@@ -159,7 +158,6 @@ function savePotatoLocation(burnedpotato) {
     };
 
     var watchID;
-
     function successCallback(position) {
 
         var Path = Parse.Object.extend("Path");
@@ -169,8 +167,9 @@ function savePotatoLocation(burnedpotato) {
         var userLocation = new Parse.GeoPoint(latitude, longitude);
         potatoPath.save({
             location: userLocation,
-            burned: burnedpotato
+            burned: burned
         }).then(function(object) {
+            burned = false;
             navigator.geolocation.clearWatch(watchID);
         });
     }
@@ -198,9 +197,6 @@ function animateReceivedPotato() {
 }
 
 function burnedPotatoImage(burnedPotato) {
-    if (!burnedpotato) {
-        savePotatoLocation(burnedPotato);
-    };
     document.getElementById("potato").src = burnedPotato ? "images/burnedpotato.png" : "images/potato.png";
 }
 
@@ -220,7 +216,7 @@ window.onload = function() {
     xmppConnect();
 };
 
-$("#stove").on("tap", function(event) {
+$("#page-body").on("tap", function(event) {
     event.preventDefault();
     if (potatoReceived) {
         sendMessage();
