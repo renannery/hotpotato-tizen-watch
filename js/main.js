@@ -6,7 +6,7 @@ var host = "jabber.rootbash.com";
 var jid;
 var potatoReceived = false;
 var randomId;
-
+var Parse;
 function displayCountdown() {
     countdownField = document.getElementById('countdown');
     startCountdown();
@@ -29,7 +29,7 @@ function countdown() {
 }
 
 function stopCountdown() {
-    clearInterval(countdownInterval);   
+    clearInterval(countdownInterval);
     secondsToBurn = 10;
     countdownField.innerHTML = "";
 }
@@ -148,6 +148,37 @@ function sendMessage() {
     animateSendPotato();
     stopCountdown();
     burnedPotatoImage(false);
+    savePotatoLocation(false);
+}
+
+function savePotatoLocation(burnedpotato) {
+    var options = {
+        enableHighAccuracy: true,
+        maximumAge: 600000,
+        timeout: 5000
+    };
+
+    var watchID;
+
+    function successCallback(position) {
+
+        var Path = Parse.Object.extend("Path");
+        var potatoPath = new Path();
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+        var userLocation = new Parse.GeoPoint(latitude, longitude);
+        potatoPath.save({
+            location: userLocation,
+            burned: burnedpotato
+        }).then(function(object) {
+            navigator.geolocation.clearWatch(watchID);
+        });
+    }
+
+    function errorCallback(error) {}
+
+    var watchID = navigator.geolocation.watchPosition(successCallback, errorCallback, options);
+
 }
 
 function animateSendPotato() {
@@ -167,6 +198,9 @@ function animateReceivedPotato() {
 }
 
 function burnedPotatoImage(burnedPotato) {
+    if (!burnedpotato) {
+        savePotatoLocation(burnedPotato);
+    };
     document.getElementById("potato").src = burnedPotato ? "images/burnedpotato.png" : "images/potato.png";
 }
 
@@ -178,6 +212,7 @@ window.onload = function() {
             } catch (ignore) {}
         }
     });
+    Parse.initialize("1YUyKkLv9N8FxHAp8ivS6WluD8JCbxYTm4JK8bgW", "7SDxfjnVqLUOPoAUlURxCvKIYfgSJTv2mosIqoKL");
 
     displayTime();
     initDigitalWatch();
@@ -185,12 +220,14 @@ window.onload = function() {
     xmppConnect();
 };
 
+$("#stove").on("tap", function(event) {
+    event.preventDefault();
+    if (potatoReceived) {
+        sendMessage();
+    }
+});
+
 $(document).ready(function() {
     animateSendPotato();
-    $("#page-body").on("tap", function(event) {
-        event.preventDefault();
-        if (potatoReceived) {
-            sendMessage();
-        }
-    });
+    Parse = require('parse');
 });
