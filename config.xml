@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<widget xmlns="http://www.w3.org/ns/widgets" xmlns:tizen="http://tizen.org/ns/widgets" id="http://yourdomain/HotpotatoWatch" version="1.0.0" viewmodes="maximized">
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:tizen="http://tizen.org/ns/widgets" id="https://br.linkedin.com/in/renannery" version="1.0.0" viewmodes="maximized">
     <access origin="*" subdomains="true"></access>
     <tizen:allow-navigation>*</tizen:allow-navigation>
-    <tizen:application id="kVV4RYHcq9.HotpotatoWatch" package="kVV4RYHcq9" required_version="2.3.1"/>
+    <tizen:application id="XS60ijdyPu.HotPotato" package="XS60ijdyPu" required_version="2.3.1"/>
+    <author href="https://br.linkedin.com/in/renannery" email="renannery@gmail.com">Renan Nery</author>
     <tizen:category name="http://tizen.org/category/wearable_clock"/>
     <content src="index.html"/>
     <feature name="http://tizen.org/feature/screen.size.all"/>
+    <feature name="http://tizen.org/feature/location.gps"/>
     <icon src="icon.png"/>
+    <license href="http://www.apache.org/licenses/LICENSE-2.0">Apache v2.0</license>
     <name>Hot Potato</name>
     <tizen:privilege name="http://tizen.org/privilege/internet"/>
+    <tizen:privilege name="http://tizen.org/privilege/location"/>
     <tizen:profile name="wearable"/>
     <tizen:setting background-support="disable" encryption="disable" hwkey-event="enable"/>
-    <tizen:privilege name="http://tizen.org/privilege/location"/>
-	<feature name="http://tizen.org/feature/location.gps"/>
 </widget>
